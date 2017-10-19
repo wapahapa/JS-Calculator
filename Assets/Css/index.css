@@ -1,0 +1,71 @@
+.grd-container{
+    border: 2px solid red;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(7, 0.7fr);
+    grid-gap: 8px;
+    width: 450px;
+    margin: auto;
+    padding: 15px;
+    align-items: stretch;
+    background-color: rgba(129, 118, 118, 0.616);
+    border-radius: 20px;
+    
+}
+.btn {
+    text-align: center;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 8px;
+    font-size: 35px;
+    padding-top: 20px;
+    background-color: rgb(211, 211, 211);
+    color: rgb(0, 0, 0);
+    box-shadow: 1px 1px 2px black;
+    user-select: none;
+    font-family: 'Doppio One', 'sans-serif';
+}
+.btn:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+.btn:active {
+    box-shadow: inset 2px 2px rgb(0, 0, 0);
+}
+.numDisplay {
+    grid-column: 1/5;
+    padding: 5px;
+    border: 15px inset rgb(138, 114, 114);
+    background-color: rgba(73, 167, 73, 0.705);
+    user-select: none;
+    font-family: 'Orbitron', 'sans-serif';
+    
+    
+}
+.mainDisplay {
+    font-size: 45px;
+    text-align: right;
+    text-overflow: hidden;
+    white-space: nowrap;
+    overflow: hidden;
+    
+}
+
+.chainDisplay {
+    font-size: 18px;
+    text-align: right;
+    text-overflow: hidden;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.oPlus {
+    grid-row: 6/8;
+    grid-column: 4/5;
+    padding-top: 53px;
+    font-size: 40px
+}
+.oTimes {
+    padding-top: 25px;
+}
+.C, .CE {
+    background-color: rgba(204, 53, 53, 0.747);
+}
