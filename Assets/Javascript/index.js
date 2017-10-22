@@ -5,7 +5,7 @@ var chainDisplay = document.getElementsByClassName("chainDisplay")[0];
 var chainString= "0";
 updateDisplay();
 
-var memory = "";
+var memory = "0";
 
 var chainLastChar = "num";
 var decimalCheck = false;
@@ -62,7 +62,7 @@ function memRecall() {
 document.getElementsByClassName("CE")[0].addEventListener('click', ClearEntry);
 function ClearEntry() {
     decimalCheck = false;
-    memory = "";
+    memory = "0";
     mainString = "0";
     chainString = "0";
     updateDisplay();
