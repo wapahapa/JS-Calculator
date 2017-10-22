@@ -69,3 +69,6 @@
 .C, .CE {
     background-color: rgba(204, 53, 53, 0.747);
 }
+.oANS {
+    grid-column: 1/3;
+}
