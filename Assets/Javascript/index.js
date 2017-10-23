@@ -11,7 +11,6 @@ var chainLastChar = "num";
 var decimalCheck = false;
 
 
-
 function lastEntry() {
     return chainString[chainString.length -1];
 }
