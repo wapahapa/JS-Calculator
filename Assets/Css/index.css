@@ -4,12 +4,15 @@
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(7, 0.7fr);
     grid-gap: 8px;
+    min-width: 0;
     width: 450px;
+    min-height: 0;
     margin: auto;
     padding: 15px;
     align-items: stretch;
-    background-color: rgba(129, 118, 118, 0.616);
+    background-color: rgba(129, 118, 118, 0.671);
     border-radius: 20px;
+    box-sizing: border-box;
     
 }
 .btn {
@@ -23,6 +26,7 @@
     box-shadow: 1px 1px 2px black;
     user-select: none;
     font-family: 'Doppio One', 'sans-serif';
+    box-sizing: border-box;
 }
 .btn:hover {
     cursor: pointer;
@@ -71,4 +75,21 @@
 }
 .oANS {
     grid-column: 1/3;
+}
+.canvWrap {
+    position: relative;
+    z-index: -1;
+}
+#canv {
+    position: absolute;
+    z-index: -1;
+}
+.AnimationOff {
+    width: 150px;
+    background-color: red;
+    text-align: center;
+    display: block;
+    margin: auto;
+    margin-top: 10;
+    cursor: pointer;
 }

@@ -1,3 +1,208 @@
+var canvas = document.getElementById("canv");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+var ctx = canvas.getContext("2d");
+
+window.addEventListener("resize", function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    init();
+});
+window.addEventListener("scroll", function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+})
+
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getPointDist(x1, x2, y1, y2) {
+    var distX = x2-x1;
+    var distY = y2-y1;
+    //Pythagoras
+    return Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+};
+var Circles = [];
+
+var mouse = {
+    x: 10,
+    y: 10
+}
+
+
+
+function mouseUp(e) {
+    mouse.x = e.x;
+    mouse.y = e.y;
+}
+
+window.addEventListener('mousemove', mouseUp);
+function rotateCircle(velocity, angle) {
+    const rotatedVelocities = {
+        x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
+        y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle)
+    };
+
+    return rotatedVelocities;
+}
+
+function circleCollision(circle1, circle2) {
+    const xVelDiff = circle1.vel.x - circle2.vel.x;
+    const yVelDiff = circle1.vel.y - circle2.vel.y;
+    const xDiff = circle2.x - circle1.x;
+    const yDiff = circle2.y - circle1.y;
+
+    if (xVelDiff * xDiff + yVelDiff * yDiff >= 0) {
+        const angl = -Math.atan2(circle2.y - circle1.y, circle2.x - circle1.y);
+
+        const c1m = circle1.mass;
+        const c2m = circle2.mass;
+        const c1u = rotateCircle(circle1.vel, angl);
+        const c2u = rotateCircle(circle2.vel, angl);
+
+        const v1 = { x: c1u.x * (c1m - c2m) / (c1m + c2m) + c2u.x * 2 * c2m / (c1m + c2m), y: c1u.y };
+        const v2 = { x: c2u.x * (c1m - c2m) / (c1m + c2m) + c1u.x * 2 * c2m / (c1m + c2m), y: c2u.y };
+
+        const trueV1 = rotateCircle(v1, -angl);
+        const trueV2 = rotateCircle(v2, -angl);
+
+        circle1.vel.x = trueV1.x;
+        circle1.vel.y = trueV1.y;
+        
+        circle2.vel.x = trueV2.x;
+        circle2.vel.y = trueV2.y;
+    }
+}
+
+function Circle(x, y, radius, numText) {
+    this.x = x;
+    this.y = y;
+    this.vel = {
+        x: (Math.random() - 0.5) * 8,
+        y: (Math.random() - 0.5) * 8
+    }
+    this.radius = radius;
+    this.numText = numText.toString();
+    this.mass = this.radius / 2;
+    this.color = `rgb(${getRandomInt(50, 255)}, ${getRandomInt(50, 255)}, ${getRandomInt(50, 255)})`;
+    
+    this.fontSize = this.radius;
+    this.fontYOffset = this.fontSize / 2;
+
+
+    this.draw = () => {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = "rgb(200, 200, 200)";
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+        
+        ctx.beginPath();
+        ctx.font = `${this.fontSize}pt Sans-Serif`;
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = "3";
+        ctx.textAlign = "center";
+        ctx.strokeText(this.numText, this.x, this.y + this.fontYOffset);
+        ctx.fillText(this.numText, this.x, this.y + this.fontYOffset);
+        
+        ctx.closePath();
+    }
+    this.update = Circles => {
+        this.x += this.vel.x;
+        this.y += this.vel.y;
+
+        for (var i = 0; i < Circles.length; i++) {
+            if (this === Circles[i]) {
+                continue;
+            }
+            if (getPointDist(this.x, Circles[i].x, this.y, Circles[i].y) - (this.radius + Circles[i].radius) < 0) {
+                console.log("Collided circles");
+                circleCollision(this, Circles[i]);
+                this.color = `rgb(${getRandomInt(50, 255)}, ${getRandomInt(50, 255)}, ${getRandomInt(50, 255)})`
+                Circles[i].color = `rgb(${getRandomInt(50, 255)}, ${getRandomInt(50, 255)}, ${getRandomInt(50, 255)})`
+
+            }
+        }
+        
+
+
+        if (this.x + this.radius > window.innerWidth || this.x - this.radius < 0) {
+            this.vel.x = -this.vel.x;
+        }
+        if (this.y + this.radius > window.innerHeight || this.y - this.radius < 0) {
+            this.vel.y = -this.vel.y;
+        }
+        
+        this.draw();
+    }
+}
+function produceCircle(circleTxt) {
+        var txt = circleTxt;
+        let radius = getRandomInt(25, 50);
+        let x = getRandomInt(3 + radius, canvas.width - radius - 3);
+        let y = getRandomInt(3 + radius, canvas.height - radius - 3);
+        
+        if (Circles.length >= 1) {
+        for (var i = 0; i < Circles.length; i++) {
+            if (getPointDist(x, Circles[i].x, y, Circles[i].y) - (radius + Circles[i].radius) < 0 ) {
+                
+               
+                x = getRandomInt(3 + radius, canvas.width - radius - 3);
+                y = getRandomInt(3 + radius, canvas.height - radius - 3);
+                i = -1;
+                              
+            }
+        }
+            
+            return new Circle(x, y, radius, txt);
+            
+        }
+        else {
+            
+            return new Circle(x, y, radius, txt);
+        }
+
+}
+
+
+function init() {
+    testCircle =  new Circle(200, 100, 40, "8");
+    testCircle2 = new Circle(200, 300, 80, "0");
+   
+}
+
+
+var animationSwitch;
+function animate() {
+    animationSwitch = requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    
+    
+    for (var i = 0; i < Circles.length; i++) {
+        Circles[i].update(Circles);
+    }
+
+}
+init();
+animate();
+
+document.getElementsByClassName("AnimationOff")[0].addEventListener('click', function() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    cancelAnimationFrame(animationSwitch);
+    
+    console.log("animation off");
+})
+
+
 
 var mainDisplay = document.getElementsByClassName("mainDisplay")[0];
 var mainString = "0";
@@ -65,6 +270,7 @@ function ClearEntry() {
     mainString = "0";
     chainString = "0";
     updateDisplay();
+    Circles = [];
 }
 // C button
 document.getElementsByClassName("C")[0].addEventListener('click', Clear);
@@ -77,6 +283,13 @@ function Clear() {
         chainString = "0";
     }
     updateDisplay();
+    if (Circles.length > 1) {
+        Circles.pop();
+    }
+    else if (Circles.length = 1) {
+        Circles = [];
+    }
+    
 }
 // ANS button 
 document.getElementsByClassName("oANS")[0].addEventListener('click', ANS);
@@ -177,6 +390,7 @@ function numButton(btnNode) {
                 chainString = "";
             }                
                 chainString += btnNode.textContent;
+                Circles.push(produceCircle(btnNode.textContent));
                 checkLimit();
                 chainLastChar = "num";
                 updateDisplay();
@@ -196,6 +410,7 @@ function operatorEqual() {
         chainString = "Division by zero";
         mainString = "ERROR";
         updateDisplay();
+        Circles = [];
         chainString = "0";
         setTimeout(ClearEntry, 2000);
     }
@@ -204,6 +419,7 @@ function operatorEqual() {
     checkLimit();
     chainLastChar = "num";
     updateDisplay();
+    Circles = [];
     }
 }
 
