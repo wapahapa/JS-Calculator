@@ -29,19 +29,17 @@ function getPointDist(x1, x2, y1, y2) {
 };
 var Circles = [];
 
-var mouse = {
+/*var mouse = {
     x: 10,
     y: 10
 }
-
-
-
+window.addEventListener('mousemove', mouseUp);
 function mouseUp(e) {
     mouse.x = e.x;
     mouse.y = e.y;
-}
+}*/
 
-window.addEventListener('mousemove', mouseUp);
+
 function rotateCircle(velocity, angle) {
     const rotatedVelocities = {
         x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
