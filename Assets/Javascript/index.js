@@ -278,17 +278,20 @@ function Clear() {
     if (lastEntry() === ".") {
         decimalCheck = false;
     }
+    if (isNaN(lastEntry()) !== true){
+        if (Circles.length > 1) {
+            Circles.pop();
+        }
+        else if (Circles.length = 1) {
+            Circles = [];
+        }
+    }
     chainString = chainString.slice(0, -1);
     if (chainString.length < 1) {
         chainString = "0";
     }
     updateDisplay();
-    if (Circles.length > 1) {
-        Circles.pop();
-    }
-    else if (Circles.length = 1) {
-        Circles = [];
-    }
+    
     
 }
 // ANS button 
