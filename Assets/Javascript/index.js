@@ -122,7 +122,6 @@ function Circle(x, y, radius, numText) {
                 continue;
             }
             if (getPointDist(this.x, Circles[i].x, this.y, Circles[i].y) - (this.radius + Circles[i].radius) < 0) {
-                console.log("Collided circles");
                 circleCollision(this, Circles[i]);
                 this.color = `rgb(${getRandomInt(50, 255)}, ${getRandomInt(50, 255)}, ${getRandomInt(50, 255)})`
                 Circles[i].color = `rgb(${getRandomInt(50, 255)}, ${getRandomInt(50, 255)}, ${getRandomInt(50, 255)})`
