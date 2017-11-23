@@ -38,6 +38,18 @@ function mouseUp(e) {
     mouse.x = e.x;
     mouse.y = e.y;
 }*/
+function lastOperator(string) {
+    let lastOperator;
+    let i = 0;
+    while(i < string.length) {
+        if (string[i] === "-" || string[i] === "/" || string[i] === "+" || string[i] === "*"){
+            lastOperator = string[i];
+        }
+        i++;
+    }
+    return lastOperator;
+}
+
 
 
 function rotateCircle(velocity, angle) {
@@ -76,6 +88,34 @@ function circleCollision(circle1, circle2) {
         circle2.vel.y = trueV2.y;
     }
 }
+function circleEat(circle1, circle2) {
+    let bigCircle;
+    let smallCircle;
+    let operator = lastOperator(chainString);
+    if (operator === undefined) {
+        circleCollision(circle1, circle2);
+    }
+    if (operator !== undefined) {
+        circle1.radius > circle2.radius ? (bigCircle = circle1, smallCircle = circle2) : (smallCircle = circle1, bigCircle = circle2);
+        
+            operator === "-" || operator === "/" ? (bigCircle.radius = bigCircle.radius - (smallCircle.radius / 2)) : bigCircle.radius = bigCircle.radius + (smallCircle.radius / 2)
+            
+        
+            evalTextString = bigCircle.numText.toString() + operator + smallCircle.numText.toString();
+            bigCircle.numText = (eval(evalTextString))
+            
+            if (operator === "/" || operator === "/" ) {
+                bigCircle.numText = bigCircle.numText.toFixed(1)
+            }
+            
+            Circles.splice(Circles.indexOf(smallCircle), 1);
+    }
+    
+    
+
+
+
+}
 
 function Circle(x, y, radius, numText) {
     this.x = x;
@@ -86,7 +126,8 @@ function Circle(x, y, radius, numText) {
     }
     this.radius = radius;
     this.numText = numText.toString();
-    this.mass = this.radius / 2;
+    //this.numValue = parseInt(this.numText);
+    this.mass = radius / 2;
     this.color = `rgb(${getRandomInt(50, 255)}, ${getRandomInt(50, 255)}, ${getRandomInt(50, 255)})`;
     
     this.fontSize = this.radius;
@@ -102,12 +143,18 @@ function Circle(x, y, radius, numText) {
         ctx.fill();
         ctx.closePath();
         
+        this.fontSize = this.radius;
+        this.fontYOffset = this.fontSize / 2;
         ctx.beginPath();
         ctx.font = `${this.fontSize}pt Sans-Serif`;
         ctx.fillStyle = "white";
         ctx.strokeStyle = "black";
         ctx.lineWidth = "3";
         ctx.textAlign = "center";
+
+        if (this.numText.toString().endsWith('.0')) {
+            this.numText = this.numText.slice(0, this.numText.length - 2);
+        }
         ctx.strokeText(this.numText, this.x, this.y + this.fontYOffset);
         ctx.fillText(this.numText, this.x, this.y + this.fontYOffset);
         
@@ -122,9 +169,11 @@ function Circle(x, y, radius, numText) {
                 continue;
             }
             if (getPointDist(this.x, Circles[i].x, this.y, Circles[i].y) - (this.radius + Circles[i].radius) < 0) {
-                circleCollision(this, Circles[i]);
+                /*circleCollision(this, Circles[i]);
                 this.color = `rgb(${getRandomInt(50, 255)}, ${getRandomInt(50, 255)}, ${getRandomInt(50, 255)})`
-                Circles[i].color = `rgb(${getRandomInt(50, 255)}, ${getRandomInt(50, 255)}, ${getRandomInt(50, 255)})`
+                Circles[i].color = `rgb(${getRandomInt(50, 255)}, ${getRandomInt(50, 255)}, ${getRandomInt(50, 255)})`*/
+                circleEat(this, Circles[i]);
+
 
             }
         }
@@ -143,7 +192,7 @@ function Circle(x, y, radius, numText) {
 }
 function produceCircle(circleTxt) {
         var txt = circleTxt;
-        let radius = getRandomInt(25, 50);
+        let radius = (parseInt(txt) + 1) * 6.5;
         let x = getRandomInt(3 + radius, canvas.width - radius - 3);
         let y = getRandomInt(3 + radius, canvas.height - radius - 3);
         
@@ -197,6 +246,7 @@ document.getElementsByClassName("AnimationOff")[0].addEventListener('click', fun
     cancelAnimationFrame(animationSwitch);
     
     console.log("animation off");
+    this.style.display = "none";
 })
 
 
