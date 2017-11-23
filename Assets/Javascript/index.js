@@ -92,16 +92,18 @@ function circleEat(circle1, circle2) {
     let bigCircle;
     let smallCircle;
     let operator = lastOperator(chainString);
+    if (operator === undefined) {
+        circleCollision(circle1, circle2);
+    }
     if (operator !== undefined) {
         circle1.radius > circle2.radius ? (bigCircle = circle1, smallCircle = circle2) : (smallCircle = circle1, bigCircle = circle2);
         
             operator === "-" || operator === "/" ? (bigCircle.radius = bigCircle.radius - (smallCircle.radius / 2)) : bigCircle.radius = bigCircle.radius + (smallCircle.radius / 2)
-            //evalRadString = (bigCircle.radius).toString() + operator + (smallCircle.radius / 2).toString();
-           //bigCircle.radius = eval(evalRadString);
+            
         
             evalTextString = bigCircle.numText.toString() + operator + smallCircle.numText.toString();
             bigCircle.numText = (eval(evalTextString))
-            console.log(bigCircle.numText + "calc")
+            
             if (operator === "/" || operator === "/" ) {
                 bigCircle.numText = bigCircle.numText.toFixed(1)
             }
@@ -149,6 +151,10 @@ function Circle(x, y, radius, numText) {
         ctx.strokeStyle = "black";
         ctx.lineWidth = "3";
         ctx.textAlign = "center";
+
+        if (this.numText.toString().endsWith('.0')) {
+            this.numText = this.numText.slice(0, this.numText.length - 2);
+        }
         ctx.strokeText(this.numText, this.x, this.y + this.fontYOffset);
         ctx.fillText(this.numText, this.x, this.y + this.fontYOffset);
         
@@ -240,6 +246,7 @@ document.getElementsByClassName("AnimationOff")[0].addEventListener('click', fun
     cancelAnimationFrame(animationSwitch);
     
     console.log("animation off");
+    this.style.display = "none";
 })
 
 
